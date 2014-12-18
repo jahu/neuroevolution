@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class SimpleGeneticEvaluator implements GeneticEvaluator {
 
-    private static final long MAX_NUMBER_OF_EVOLUTION_CYCLES = 1000000;
+    private static final long MAX_NUMBER_OF_EVOLUTION_CYCLES = 500000;
 
     private StopCondition stopCondition = null;
 
@@ -23,18 +23,20 @@ public class SimpleGeneticEvaluator implements GeneticEvaluator {
 
         int numberOfEvolutionCycles = 0;
 
-        while (! hasAcceptableChromosome(population) || numberOfEvolutionCycles > MAX_NUMBER_OF_EVOLUTION_CYCLES) {
+        while (! hasAcceptableChromosome(population, fitnessTestData) && numberOfEvolutionCycles < MAX_NUMBER_OF_EVOLUTION_CYCLES) {
             population = selectionMethod.selectStrongestPopulation(population, fitnessFunction, fitnessTestData);
             population = reproductionMethod.getNewGeneration(population);
+            numberOfEvolutionCycles++;
+            System.out.println(numberOfEvolutionCycles);
         }
 
         return selectionMethod.selectStrongestChromosome(population, fitnessFunction, fitnessTestData);
     }
 
-    private boolean hasAcceptableChromosome(Population population) {
+    private boolean hasAcceptableChromosome(Population population, FitnessTestData fitnessTestData) {
         Set<Chromosome> chromosomes = population.getChromosomes();
         for (Chromosome chromosome: chromosomes) {
-            if (stopCondition.isChromosomeAcceptable(chromosome)) {
+            if (stopCondition.isChromosomeAcceptable(chromosome, fitnessTestData)) {
                 return true;
             }
         }

@@ -1,7 +1,7 @@
 package pl.jacekgralak.neuroevolution.genetic.core.domain;
 
-public interface StopCondition<T extends Chromosome> {
+public interface StopCondition<T extends Chromosome, Y extends FitnessTestData> {
 
-    boolean isChromosomeAcceptable(T chromosome);
+    boolean isChromosomeAcceptable(T chromosome, Y testData);
 
 }
