@@ -1,11 +1,11 @@
 package pl.jacekgralak.neuroevolution.genetic.core.domain;
 
-import java.util.Set;
+import java.util.List;
 
 public interface Population<T extends Chromosome> {
 
-    Set<T> getChromosomes();
+    List<T> getChromosomes();
 
-    void setChromosomes(Set<T> chromosomes);
+    void setChromosomes(List<T> chromosomes);
 
 }

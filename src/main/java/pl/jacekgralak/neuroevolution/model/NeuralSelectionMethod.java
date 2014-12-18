@@ -21,21 +21,33 @@ public class NeuralSelectionMethod implements SelectionMethod<NeuralPopulation, 
         chromosomes.sort(new Comparator<NeuralChromosome>() {
             @Override
             public int compare(NeuralChromosome neuralChromosome, NeuralChromosome t1) {
-                double diff = chromosomesAdaptation.get(neuralChromosome) - chromosomesAdaptation.get(t1);
-                if (diff < 0) {
-                    return 1;
-                } else {
-                    return 0;
-                }
+                Double a = chromosomesAdaptation.get(neuralChromosome);
+                Double b = chromosomesAdaptation.get(t1);
+                int res = a.compareTo(b);
+                return a.compareTo(b);
             }
         });
 
+        // TODO select only best chromosomes
+        population.getChromosomes().clear();
+        for (int i=0; i<chromosomes.size(); i++) {
+            population.getChromosomes().add(chromosomes.get(i));
+        }
         return population;
     }
 
     @Override
     public Chromosome selectStrongestChromosome(NeuralPopulation population, NeuralFitnessFunction fitnessFunction, NeuralLearningVectorTestData fitnessTestData) {
-        return population.getChromosomes().iterator().next();
+        Chromosome strongestChromosome = null;
+        double minError = Double.MAX_VALUE;
+        for (NeuralChromosome neuralNetwork: population.getChromosomes()) {
+            double error = fitnessFunction.getAdaptationValue(neuralNetwork, fitnessTestData);
+            if (error < minError) {
+                minError = error;
+                strongestChromosome = neuralNetwork;
+            }
+        }
+        return strongestChromosome;
     }
 
 }

@@ -3,11 +3,12 @@ package pl.jacekgralak.neuroevolution.genetic.facade;
 import pl.jacekgralak.neuroevolution.genetic.core.GeneticTask;
 import pl.jacekgralak.neuroevolution.genetic.core.domain.*;
 
+import java.util.List;
 import java.util.Set;
 
 public class SimpleGeneticEvaluator implements GeneticEvaluator {
 
-    private static final long MAX_NUMBER_OF_EVOLUTION_CYCLES = 500000;
+    private static final long MAX_NUMBER_OF_EVOLUTION_CYCLES = 500;
 
     private StopCondition stopCondition = null;
 
@@ -34,7 +35,7 @@ public class SimpleGeneticEvaluator implements GeneticEvaluator {
     }
 
     private boolean hasAcceptableChromosome(Population population, FitnessTestData fitnessTestData) {
-        Set<Chromosome> chromosomes = population.getChromosomes();
+        List<Chromosome> chromosomes = population.getChromosomes();
         for (Chromosome chromosome: chromosomes) {
             if (stopCondition.isChromosomeAcceptable(chromosome, fitnessTestData)) {
                 return true;

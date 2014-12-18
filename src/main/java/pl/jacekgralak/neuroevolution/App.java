@@ -6,6 +6,7 @@ import pl.jacekgralak.neuroevolution.genetic.facade.GeneticEvaluator;
 import pl.jacekgralak.neuroevolution.genetic.facade.SimpleGeneticEvaluator;
 import pl.jacekgralak.neuroevolution.model.*;
 import pl.jacekgralak.neuroevolution.neural.core.LearningVector;
+import pl.jacekgralak.neuroevolution.neural.core.NeuralNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,13 @@ public class App
 
         GeneticEvaluator geneticEvaluator = new SimpleGeneticEvaluator();
         NeuralChromosome solution = (NeuralChromosome) geneticEvaluator.evaluate(geneticTask, stopCondition);
+        NeuralNetwork neuralNetwork = solution.getGenotype();
+
+        System.out.println("1 = " + neuralNetwork.getOutput(new double[]{0.1, 0.9}));
+        System.out.println("0 = " + neuralNetwork.getOutput(new double[]{0.9, 0.9}));
+        System.out.println("0 = " + neuralNetwork.getOutput(new double[]{0.0, 0.1}));
+        System.out.println("1 = " + neuralNetwork.getOutput(new double[]{0.9, 0.1}));
+
         System.out.println(solution.getGenotype());
     }
 
