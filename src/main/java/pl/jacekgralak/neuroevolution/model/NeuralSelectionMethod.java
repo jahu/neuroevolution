@@ -9,29 +9,17 @@ public class NeuralSelectionMethod implements SelectionMethod<NeuralPopulation, 
 
     @Override
     public NeuralPopulation selectStrongestPopulation(NeuralPopulation population, NeuralFitnessFunction fitnessFunction, NeuralLearningVectorTestData fitnessTestData) {
-        Map<NeuralChromosome, Double> chromosomesAdaptation = new HashMap<>();
+        List<NeuralChromosomeError> chromosomeErrors = new ArrayList<>();
         for (NeuralChromosome neuralNetwork: population.getChromosomes()) {
             double error = fitnessFunction.getAdaptationValue(neuralNetwork, fitnessTestData);
-            chromosomesAdaptation.put(neuralNetwork, error);
+            chromosomeErrors.add(new NeuralChromosomeError(error, neuralNetwork));
         }
 
-        List<NeuralChromosome> chromosomes = new ArrayList<>();
-        chromosomes.addAll(chromosomesAdaptation.keySet());
-
-        chromosomes.sort(new Comparator<NeuralChromosome>() {
-            @Override
-            public int compare(NeuralChromosome neuralChromosome, NeuralChromosome t1) {
-                Double a = chromosomesAdaptation.get(neuralChromosome);
-                Double b = chromosomesAdaptation.get(t1);
-                int res = a.compareTo(b);
-                return a.compareTo(b);
-            }
-        });
-
-        // TODO select only best chromosomes
         population.getChromosomes().clear();
-        for (int i=0; i<chromosomes.size(); i++) {
-            population.getChromosomes().add(chromosomes.get(i));
+        Collections.sort(chromosomeErrors);
+        for (int i=0; i<(chromosomeErrors.size() / 2); i++) {
+            population.getChromosomes().add(chromosomeErrors.get(i).getNeuralChromosome());
+            population.getChromosomes().add(chromosomeErrors.get(i).getNeuralChromosome());
         }
         return population;
     }
@@ -48,6 +36,32 @@ public class NeuralSelectionMethod implements SelectionMethod<NeuralPopulation, 
             }
         }
         return strongestChromosome;
+    }
+
+    class NeuralChromosomeError implements Comparable<NeuralChromosomeError> {
+        private NeuralChromosome neuralChromosome;
+        private double error;
+
+        public NeuralChromosomeError(double error, NeuralChromosome neuralChromosome) {
+            this.error = error;
+            this.neuralChromosome = neuralChromosome;
+        }
+
+        public NeuralChromosome getNeuralChromosome() {
+            return neuralChromosome;
+        }
+
+        public double getError() {
+            return error;
+        }
+
+        @Override
+        public int compareTo(NeuralChromosomeError neuralChromosomeError) {
+            Double a = this.getError();
+            Double b = neuralChromosomeError.getError();
+            int res = a.compareTo(b);
+            return a.compareTo(b);
+        }
     }
 
 }
